@@ -1,5 +1,5 @@
 from datetime import datetime
-
+import pandas as pd
 
 class TaskManager:
 
@@ -23,7 +23,13 @@ class TaskManager:
         return "Task updated successfully"
 
     def list(self, filter_by_status=None):
-        yield
+        listed = []
+        for task in self.tasks:
+            if task.status == filter_by_status:
+                listed.append(task.to_dict())
+        
+        return pd.DataFrame(listed, columns=["id","Description","Created at","Status","Updated at"])
+    
 
     def mark_in_progress(self):
         yield
@@ -40,24 +46,33 @@ class TaskManager:
         def __init__(self,
                      task_manager,
                      description,
-                     updated_at=datetime.now(),
-                     status="todo",
-                     created_at=None):
+                     created_at=None,
+                     status= "todo",
+                     updated_at=None):
+            
             self.manager = task_manager
             self.id = self.manager.generate_id()
             self.description = description
             self.status = status
             self.created_at = created_at if created_at is not None else datetime.now(
             )
-            self.updated_at = updated_at
+            self.updated_at = updated_at if updated_at is not None else datetime.now()
+        
+        def to_dict(self):
+            return {"id":self.id,"Description": self.description,"Created at": self.created_at,"Status": self.status,"Updated at": self.updated_at}
 
 
 print(datetime.now())
 
 manager = TaskManager()
-manager.add_task("Hello ")
+manager.add_task("Hello")
+manager.add_task("Hello")
+manager.add_task("Hello")
+manager.add_task("Hello")
 print(manager.tasks[0].description)
 
 print(manager.tasks[0].status)
 manager.update_task(1, "Selamın Aleyküm")
+
 print(manager.tasks[0].description)
+print(manager.list("todo"))
