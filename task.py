@@ -24,18 +24,26 @@ class TaskManager:
 
     def list(self, filter_by_status=None):
         listed = []
-        for task in self.tasks:
-            if task.status == filter_by_status:
+        if filter_by_status is not None:
+            for task in self.tasks:
+                if task.status == filter_by_status:
+                    listed.append(task.to_dict())
+        else:
+            for task in self.tasks:
                 listed.append(task.to_dict())
         
         return pd.DataFrame(listed, columns=["id","Description","Created at","Status","Updated at"])
     
 
-    def mark_in_progress(self):
-        yield
-
-    def mark_done(self):
-        yield
+    def mark_in_progress(self, id):
+        task = self.tasks[id -1]
+        task.status = "in progress"
+        return "Task marked as in progress"
+    
+    def mark_done(self,id):
+        task = self.tasks[id -1]
+        task.status = "Done"
+        return "Task marked as Done"
 
     class Task:
 
@@ -75,4 +83,12 @@ print(manager.tasks[0].status)
 manager.update_task(1, "Selamın Aleyküm")
 
 print(manager.tasks[0].description)
+print(manager.list())
+print(manager.mark_in_progress(1))
+print(manager.list("in progress"))
+print("----------------")
 print(manager.list("todo"))
+print("----------------")
+print(manager.list())
+print(manager.mark_done(2))
+print(manager.list())
