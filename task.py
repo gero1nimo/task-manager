@@ -15,11 +15,24 @@ class TaskManager:
         print(f"new task is created by the id of {new_task.id}")
 
     def remove_task(self, id):
-        pass
+        if id > len(self.tasks) or id <= 0:
+            return "Task with given id does not exist"
+
+        for i in range(len(self.tasks)):
+            if self.tasks[i].id == id:
+                index = i
+            elif self.tasks[i].id > id:
+                self.tasks[i].id -= 1
+            else:
+                continue
+        self.tasks.pop(index)
+        return "Task removed successfully"
 
     def update_task(self, id, new_description):
         task = self.tasks[id - 1]
         task.description = new_description
+        task.updated_at = datetime.now().strftime("%H:%M:%S %d-%m-%Y")
+        
         return "Task updated successfully"
 
     def list(self, filter_by_status=None):
@@ -38,11 +51,14 @@ class TaskManager:
     def mark_in_progress(self, id):
         task = self.tasks[id -1]
         task.status = "in progress"
+        task.updated_at = datetime.now().strftime("%H:%M:%S %d-%m-%Y")
+
         return "Task marked as in progress"
     
     def mark_done(self,id):
         task = self.tasks[id -1]
         task.status = "Done"
+        task.updated_at = datetime.now().strftime("%H:%M:%S %d-%m-%Y")
         return "Task marked as Done"
 
     class Task:
@@ -62,9 +78,8 @@ class TaskManager:
             self.id = self.manager.generate_id()
             self.description = description
             self.status = status
-            self.created_at = created_at if created_at is not None else datetime.now(
-            )
-            self.updated_at = updated_at if updated_at is not None else datetime.now()
+            self.created_at = created_at if created_at is not None else datetime.now().strftime("%H:%M:%S %d-%m-%Y")
+            self.updated_at = updated_at if updated_at is not None else datetime.now().strftime("%H:%M:%S %d-%m-%Y")
         
         def to_dict(self):
             return {"id":self.id,"Description": self.description,"Created at": self.created_at,"Status": self.status,"Updated at": self.updated_at}
@@ -74,9 +89,9 @@ print(datetime.now())
 
 manager = TaskManager()
 manager.add_task("Hello")
-manager.add_task("Hello")
-manager.add_task("Hello")
-manager.add_task("Hello")
+manager.add_task("Merhaba")
+manager.add_task("Merhaba Dünya")
+manager.add_task("AS")
 print(manager.tasks[0].description)
 
 print(manager.tasks[0].status)
@@ -91,4 +106,8 @@ print(manager.list("todo"))
 print("----------------")
 print(manager.list())
 print(manager.mark_done(2))
+print(manager.list())
+print(manager.remove_task(2))
+print(manager.remove_task(3))
+print(manager.remove_task(4))
 print(manager.list())
