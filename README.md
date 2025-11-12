@@ -5,7 +5,7 @@ https://roadmap.sh/projects/task-tracker
 
 ## Overview
 The `TaskManager` class is a simple task management system that stores tasks in JSON format and displays them using pandas DataFrames. It allows users to create, update, remove, and filter tasks by status.
-This file is created by GitHub Copilot.
+This documentation file is created by GitHub Copilot.
 
 ## Classes
 
